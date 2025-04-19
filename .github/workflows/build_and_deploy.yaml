@@ -61,9 +61,9 @@ jobs:
       # run a container which is exposed to a pre-defined port
       - name: Deploy to Compute engine
         run: |-
-          gcloud --quiet compute ssh ${{ env.INSTANCE_NAME }}
-          --project=${{ env.PROJECT_ID }}
-          --zone=${{ env.GCP_ZONE }} --command \
+          gcloud --quiet compute ssh ${{ env.INSTANCE_NAME }}\
+          --project=${{ env.PROJECT_ID }}\
+          --zone=${{ env.GCP_ZONE }} --command\
             'sudo rm -rf /home/runner/${{ env.WORKING_DIR }} \
             && git clone ${{ env.GITHUB_REPO_URL }} ${{ env.WORKING_DIR }} \
             && cd "$_" \

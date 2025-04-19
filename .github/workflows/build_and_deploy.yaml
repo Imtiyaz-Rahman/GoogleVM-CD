@@ -59,14 +59,16 @@ jobs:
 
       # Fetch the repo's content, build the Docker image and
       # run a container which is exposed to a pre-defined port
-      - name: Deploy to Compute engine
-        run: |-
-          gcloud --quiet compute ssh ${{ env.INSTANCE_NAME }}\
-          --project=${{ env.PROJECT_ID }}\
-          --zone=${{ env.GCP_ZONE }} --command\
-            'sudo rm -rf /home/runner/${{ env.WORKING_DIR }} \
-            && git clone ${{ env.GITHUB_REPO_URL }} ${{ env.WORKING_DIR }} \
-            && cd "$_" \
-            && sudo docker image build -t ${{ env.IMAGE_NAME }}:latest . \
-            && sudo docker stop ${{ env.CONTAINER_NAME }} || true && sudo docker rm ${{ env.CONTAINER_NAME }} || true \
-            && sudo docker container run -d --name ${{ env.CONTAINER_NAME }} -p 5000:5000 ${{ env.IMAGE_NAME }}:latest' 
+      - name: Deploy to Compute Engine
+        run: |
+          gcloud --quiet compute ssh ${{ env.INSTANCE_NAME }} \
+            --project=${{ env.PROJECT_ID }} \
+            --zone=${{ env.GCP_ZONE }} \
+            --command="\
+              sudo rm -rf /home/runner/${{ env.WORKING_DIR }} && \
+              git clone ${{ env.GITHUB_REPO_URL }} ${{ env.WORKING_DIR }} && \
+              cd ${{ env.WORKING_DIR }} && \
+              sudo docker image build -t ${{ env.IMAGE_NAME }}:latest . && \
+              (sudo docker stop ${{ env.CONTAINER_NAME }} || true) && \
+              (sudo docker rm ${{ env.CONTAINER_NAME }} || true) && \
+              sudo docker run -d --name ${{ env.CONTAINER_NAME }} -p 5000:5000 ${{ env.IMAGE_NAME }}:latest"

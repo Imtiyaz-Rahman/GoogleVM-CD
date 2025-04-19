@@ -28,7 +28,7 @@ jobs:
   setup-build-deploy-publish:
     name: Setup, Build, Deploy and Publish
     runs-on: ubuntu-latest
-    environment: env
+    environment: Creds
     env:
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       GCP_ZONE: ${{ secrets.GCP_ZONE }}
